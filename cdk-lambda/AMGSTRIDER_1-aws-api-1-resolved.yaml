@@ -1,0 +1,82 @@
+---
+openapi: 3.1.0
+info:
+  title: AWS API
+  version: "1"
+servers:
+- url: https://l3otdg6964.execute-api.eu-west-1.amazonaws.com
+paths:
+  /products:
+    get:
+      tags:
+      - products
+      summary: Get list of products
+      description: ""
+      parameters: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    price:
+                      type: string
+                    description:
+                      type: string
+        "500":
+          description: Server error
+  /products/{productId}:
+    get:
+      tags:
+      - products
+      summary: Get product by id
+      description: ""
+      parameters:
+      - name: productId
+        in: path
+        description: ID of product to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  price:
+                    type: string
+                  description:
+                    type: string
+        "404":
+          description: Product not found
+        "500":
+          description: Server error
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        price:
+          type: string
+        description:
+          type: string
