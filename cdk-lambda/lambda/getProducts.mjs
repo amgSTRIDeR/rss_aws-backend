@@ -5,6 +5,7 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 export async function handler() {
+  console.log(`getProducts lambda invoked`);
   try {
     const productsScan = new ScanCommand({
       TableName: 'products',

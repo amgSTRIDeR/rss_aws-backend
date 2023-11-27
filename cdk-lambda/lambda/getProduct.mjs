@@ -5,6 +5,7 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 export async function handler(event) {
+  console.log(`getProduct lambda invoked with event: ${JSON.stringify(event)}`);
   const { id } = event.pathParameters;
   if (!id) {
     return {
