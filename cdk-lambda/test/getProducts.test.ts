@@ -1,4 +1,4 @@
-import { handler } from '../lambda/getProducts';
+import { handler } from '../lambda/getProducts.mjs';
 
 describe('handler get products test', () => {
   it('should return list of products', async () => {

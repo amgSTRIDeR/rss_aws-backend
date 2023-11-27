@@ -1,4 +1,4 @@
-import { handler } from '../lambda/getProduct';
+import { handler } from '../lambda/getProduct.mjs';
 import { products } from '../mock/products';
 
 describe('handler get product test', () => {
