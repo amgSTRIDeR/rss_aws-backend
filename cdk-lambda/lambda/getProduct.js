@@ -1,10 +1,8 @@
-import { products } from "../mock/products";
 
-export async function handler(event: any) {
+exports.handler = async function(){
   try {
     const product =
-      products.find((product) => product.id === event.pathParameters?.id) ??
-      null;
+      {id: 1};
     if (!product)
       return {
         statusCode: 404,

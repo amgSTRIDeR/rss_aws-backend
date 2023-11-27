@@ -1,10 +1,8 @@
-import { products } from '../mock/products';
-
-export async function handler() {
+exports.handler = async function(){
   try {
     return {
       statusCode: 200,
-      body: JSON.stringify(products),
+      body: JSON.stringify({id: 1}),
     };
   } catch (error) {
     console.error(error);
