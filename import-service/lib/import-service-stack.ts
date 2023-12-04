@@ -24,12 +24,24 @@ export class ImportServiceStack extends cdk.Stack {
     iAmRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('CloudWatchLogsFullAccess'));
     iAmRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AWSLambda_FullAccess'));
 
-
     const importBucket = new s3.Bucket(this, 'ImportBucketSt', {
       bucketName: BUCKET_NAME,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
+      cors: [
+        {
+          allowedMethods: [
+            s3.HttpMethods.GET,
+            s3.HttpMethods.POST,
+            s3.HttpMethods.PUT,
+          ],
+          allowedOrigins: ['https://d3u0wz1bege8k2.cloudfront.net'],
+          allowedHeaders: ['*'],
+        },
+      ],
     });
+
+
 
     const importProductsFileLambda = new lambda.Function(this, 'importProductsFileLambdaSt', {
       functionName: 'import-products-file',
