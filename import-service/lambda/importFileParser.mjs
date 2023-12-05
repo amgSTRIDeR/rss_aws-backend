@@ -25,7 +25,7 @@ export async function handler(event) {
 
     const streamEnd = new Promise((resolve, reject) => {
       let currentLine = "";
-      let record = [];
+      let record= [];
 
       stream
         .on("data", (chunk) => {
