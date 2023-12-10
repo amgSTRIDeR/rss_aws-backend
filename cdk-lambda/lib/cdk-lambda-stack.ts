@@ -86,6 +86,9 @@ export class CdkLambdaStack extends Stack {
       endpoint: 'strayder@inbox.ru',
       protocol: sns.SubscriptionProtocol.EMAIL,
       topic: importProductTopic,
+      filterPolicy: {
+        count: sns.SubscriptionFilter.numericFilter({ greaterThanOrEqualTo: 100 }),
+      },
     })
 
     new sns.Subscription(this, 'RegularStockSubscription', {
@@ -93,11 +96,12 @@ export class CdkLambdaStack extends Stack {
       protocol: sns.SubscriptionProtocol.EMAIL,
       topic: importProductTopic,
       filterPolicy: {
-        count: sns.SubscriptionFilter.numericFilter({ lessThanOrEqualTo: 9 }),
+        count: sns.SubscriptionFilter.numericFilter({ lessThanOrEqualTo: 99 }),
       },
     })
 
     const catalogBatchProcessHandler = new lambda.Function(this, 'CatalogBatchProcessHandler', {
+      functionName: 'catalog-batch-process',
       runtime: lambda.Runtime.NODEJS_18_X,
       code: lambda.Code.fromAsset(`lambda`),
       handler: 'catalogBatchProcess.handler',
@@ -108,5 +112,6 @@ export class CdkLambdaStack extends Stack {
 
     importProductTopic.grantPublish(catalogBatchProcessHandler);
     catalogBatchProcessHandler.addEventSource(new SqsEventSource(importQueue, { batchSize: 5}));
+    catalogBatchProcessHandler.addToRolePolicy(dynamoDBPolicy);
   }
 }
