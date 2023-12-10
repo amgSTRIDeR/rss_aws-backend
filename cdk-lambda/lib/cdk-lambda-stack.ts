@@ -6,10 +6,16 @@ import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-al
 import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+import * as iam from 'aws-cdk-lib/aws-iam';
 
 export class CdkLambdaStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
+
+    const dynamoDBPolicy = new iam.PolicyStatement({
+      actions: ["dynamodb:Scan", "dynamodb:Query", "dynamodb:GetItem", "dynamodb:PutItem"],
+      resources: ["*"],
+  })
 
     const getProductsHandler = new lambda.Function(this, 'ProductsHandler', {
       runtime: lambda.Runtime.NODEJS_18_X,
@@ -28,6 +34,10 @@ export class CdkLambdaStack extends Stack {
       code: lambda.Code.fromAsset(`lambda`),
       handler: 'createProduct.handler',
     });
+
+    getProductsHandler.addToRolePolicy(dynamoDBPolicy);
+    getProductHandler.addToRolePolicy(dynamoDBPolicy);
+    createProductHandler.addToRolePolicy(dynamoDBPolicy);
 
     const apiGateway = new apigw.HttpApi(this, 'apiGateway', {
       corsPreflight: {
@@ -83,7 +93,7 @@ export class CdkLambdaStack extends Stack {
       protocol: sns.SubscriptionProtocol.EMAIL,
       topic: importProductTopic,
       filterPolicy: {
-        count: sns.SubscriptionFilter.numericFilter({ lessThanOrEqualTo: 10 }),
+        count: sns.SubscriptionFilter.numericFilter({ lessThanOrEqualTo: 9 }),
       },
     })
 

@@ -37,7 +37,7 @@ export async function handler() {
     console.error(error);
     return {
       statusCode: 500,
-      body: JSON.stringify(error),
+      body: `getProductsError: ${error}`,
     };
   }
 }
