@@ -28,8 +28,15 @@ export async function handler(event: APIGatewayTokenAuthorizerEvent) {
 
     const storedUserPassword = process.env[username];
 
+    console.log(storedUserPassword)
+
     if (!storedUserPassword) {
-      throw new Error('Cant find user in env');
+      return {
+        statusCode: 403,
+        body: JSON.stringify({
+          message: "User not found",
+        }),
+      };
     }
 
 
