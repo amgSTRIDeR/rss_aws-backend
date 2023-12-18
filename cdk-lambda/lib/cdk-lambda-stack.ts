@@ -9,15 +9,21 @@ export class CdkLambdaStack extends Stack {
     super(scope, id, props);
 
     const getProductsHandler = new lambda.Function(this, 'ProductsHandler', {
-      runtime: lambda.Runtime.NODEJS_18_X,
+      runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset('lambda'),
       handler: 'getProducts.handler',
     });
 
     const getProductHandler = new lambda.Function(this, 'ProductHandler', {
-      runtime: lambda.Runtime.NODEJS_18_X,
-      code: lambda.Code.fromAsset('lambda'),
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(`lambda`),
       handler: 'getProduct.handler',
+    });
+
+    const createProductHandler = new lambda.Function(this, 'createProductHandler', {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset(`lambda`),
+      handler: 'createProduct.handler',
     });
 
     const apiGateway = new apigw.HttpApi(this, 'apiGateway', {
@@ -44,6 +50,15 @@ export class CdkLambdaStack extends Stack {
       ),
       path: '/products/{id}',
       methods: [apigw.HttpMethod.GET],
+    });
+
+    apiGateway.addRoutes({
+      integration: new HttpLambdaIntegration(
+        'createProductIntergation',
+        createProductHandler
+      ),
+      path: '/products',
+      methods: [apigw.HttpMethod.POST],
     });
   }
 }
