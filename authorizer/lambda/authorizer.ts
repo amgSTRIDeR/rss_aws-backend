@@ -22,6 +22,11 @@ export async function handler(
     console.log(`plainCreds: ${plainCreds}`);
     const username = plainCreds[0];
     const password = plainCreds[1];
+
+    if (!username || !password) {
+      callback('Unauthorized');
+    }
+    
     const storedUserPassword = process.env[username];
 
     password === storedUserPassword
