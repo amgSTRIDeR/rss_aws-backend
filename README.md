@@ -1,1 +1,1 @@
-# rss_aws-backend
+# RS School AWS
